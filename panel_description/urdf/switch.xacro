@@ -1,0 +1,205 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:macro name="switch" params="parent_sector_link child_link x y z">
+
+
+		<!-- SECTOR_SWITCH TO CYLINDER JOINT -->
+		<joint name="${child_link}_switch_joint" type="fixed">
+			<parent link="${parent_sector_link}"/>
+			<child link="${child_link}"/>
+			<origin xyz="${x} ${y} ${z}" rpy="${0} ${0} ${PI/2}"/>
+		</joint>
+		<!-- Switch sector LID -->
+		<link name="${child_link}">
+			<collision>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Enclosure.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Enclosure.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${enclosureMass}"/>
+				<xacro:box_inertia m="${enclosureMass}" x="${enclosureWidth}" y="${enclosureLength}" z="${enclosureHeight}" />
+			</inertial>
+		</link>
+
+
+
+		<!-- Enclosure TO Base1 JOINT -->
+		<joint name="${child_link}_enclosure_base1_joint" type="fixed">
+			<parent link="${child_link}"/>
+			<child link="${child_link}_base1_link"/>
+			<origin xyz="${-0.0125} ${0.01} ${-0.0125}" rpy="0 ${-3*PI/2} ${-PI/2}"/>
+		</joint>
+
+		<link name='${child_link}_base1_link'>
+			<collision>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Base1.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Base1.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${baseMass}"/>
+				<xacro:box_inertia m="${baseMass}" x="${baseWidth}" y="${baseLength}" z="${baseHeight}" />
+			</inertial>
+		</link>
+
+
+
+		<!-- Enclosure TO Base2 JOINT -->
+		<joint name="${child_link}_enclosure_base2_joint" type="fixed">
+			<parent link="${child_link}"/>
+			<child link="${child_link}_base2_link"/>
+			<origin xyz="${-0.0125} ${0.01} 0.01" rpy="0 0 ${-PI/2}"/>
+		</joint>
+
+		<link name='${child_link}_base2_link'>
+			<collision>
+				<origin xyz="${-0.01} 0.003 ${-0.005}"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Base2.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Base2.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${baseMass}"/>
+				<xacro:box_inertia m="${baseMass}" x="${baseWidth}" y="${baseLength}" z="${baseHeight}" />
+			</inertial>
+		</link>
+
+
+		<!-- Base1 TO triangle JOINT -->
+		<joint name="${child_link}_base1_triangle_joint" type="fixed">
+			<parent link="${child_link}_base1_link"/>
+			<child link="${child_link}_triangle_link"/>
+			<origin xyz="${-0.01} 0.003 ${-0.005}" rpy="0 0 0"/>
+		</joint>
+
+		<link name='${child_link}_triangle_link'>
+			<collision>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Triangle.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Triangle.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${triangleMass}"/>
+				<xacro:box_inertia m="${triangleMass}" x="${triangleWidth}" y="${triangleLength}" z="${triangleHeight}" />
+			</inertial>
+		</link>
+
+
+		<!-- Triangle TO trigger JOINT Existe ligera colision con triangle, solo mover x un poquito (+- 0.001)-->
+		<joint name="${child_link}_triangle_trigger_joint" type="revolute">
+			<parent link="${child_link}_triangle_link"/>
+			<child link="${child_link}_trigger_link"/>
+			<origin xyz="${-0.005} ${0.015} ${0.005}" rpy="${3*PI/2} ${PI/2} ${PI/2}"/>
+			<limit lower="${-PI/4}" upper="${PI/4}" effort="0" velocity="1"/>
+		</joint>
+
+		<link name='${child_link}_trigger_link'>
+			<collision>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Trigger.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Trigger.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${triggerMass}"/>
+				<xacro:cylinder_inertia m="${triggerMass}" r="${triggerRadio}" h="${triggerHeight}" />
+			</inertial>
+		</link>
+
+
+
+<!-- Trigger to spring JOINT -->
+		<joint name="${child_link}_trigger_spring_joint" type="fixed">
+			<parent link="${child_link}_trigger_link"/>
+			<child link="${child_link}_spring_link"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+		</joint>
+
+		<link name='${child_link}_spring_link'>
+			<collision>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Spring.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Spring.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${springMass}"/>
+				<xacro:cylinder_inertia m="${springMass}" r="${springRadio}" h="${springHeight}" />
+			</inertial>
+		</link>
+
+		<!-- Spring TO lever JOINT -->
+		<joint name="${child_link}_spring_lever_joint" type="fixed">
+			<parent link="${child_link}_spring_link"/>
+			<child link="${child_link}_lever_link"/>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+		</joint>
+
+		<link name='${child_link}_lever_link'>
+			<collision>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/collisions/Interruptor/Lever.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</collision>
+			<visual>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<geometry>
+					<mesh filename="package://panel_description/meshes/visual/Interruptor/Lever.stl" scale="${scale_XYZ} ${scale_XYZ} ${scale_XYZ}"/>
+				</geometry>
+			</visual>
+			<inertial>
+				<origin xyz="0 0 0"	rpy="0 0 0"/>
+				<mass value="${leverMass}"/>
+				<xacro:cylinder_inertia m="${leverMass}" r="${leverRadio}" h="${leverHeight}" />
+			</inertial>
+		</link>
+
+	</xacro:macro>
+</robot>
