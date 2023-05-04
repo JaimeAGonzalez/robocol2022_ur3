@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-	<include file="$(find panel_description)/launch/simple_world.launch"/>
-	<include file="$(find panel_description)/launch/panel_start.launch"/>
+   <include file="$(find panel_description)/launch/simple_world.launch"/>
+   <include file="$(find panel_description)/launch/panel_start.launch"/>
+   ## Inser world launch
 </launch>
